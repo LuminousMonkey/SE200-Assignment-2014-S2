@@ -1,3 +1,12 @@
+/*
+ * Camera
+ *
+ * Description:
+ *  Base class as provided in the assignment details.
+ */
+
+package hardware;
+
 public abstract class Camera
 {
   public Camera() {}

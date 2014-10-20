@@ -1,3 +1,12 @@
+/*
+ * Driver
+ *
+ * Description:
+ *  Base assignment class.
+ */
+
+package hardware;
+
 public abstract class Driver
 {
   public Driver() {}

@@ -1,3 +1,12 @@
+/*
+ * Comm
+ *
+ * Description:
+ *  Basic class as provided in the assignment details.
+ */
+
+package hardware;
+
 public abstract class Comm
 {
   public Comm() {}
