@@ -9,9 +9,11 @@
 
 package hardware;
 
+import controller.RoverController;
+
 public class MockComm extends EarthComm {
-  public MockComm() {
-    super();
+  public MockComm(RoverController inContext) {
+    super(inContext);
   }
 
   /*

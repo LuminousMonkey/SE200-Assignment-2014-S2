@@ -18,6 +18,7 @@ public class RoverIdle extends RoverState {
   // My tallest, message from... EAR..TH.
   public void setReceiving(RoverController inContext,
                            String message) {
+    inContext.setState(new RoverReceiving());
   }
 
   // We shouldn't be going from idle to sending.

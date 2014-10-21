@@ -34,7 +34,7 @@ public class Assignment {
     currentCamera = new RoverCamera(controller);
     currentSoilAnalyser = new RoverSoilAnalyser(controller);
 
-    currentComms = new EarthComm();
+
   }
 
   private static void testReceive() {

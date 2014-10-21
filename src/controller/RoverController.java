@@ -9,11 +9,20 @@ public class RoverController {
   private RoverState currentState;
   private Driver driver;
 
+  public RoverController() {
+    currentState = new RoverIdle();
+  }
+
   public Driver getDriver() {
     return driver;
   }
 
   public void setState(RoverState newState) {
+    currentState = newState;
+  }
+
+  public RoverState getState() {
+    return currentState;
   }
 
   public void execute(int taskListId) {
