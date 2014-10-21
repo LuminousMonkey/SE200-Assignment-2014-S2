@@ -1,13 +1,17 @@
 package controller;
 
 import java.util.ArrayList;
+import hardware.Camera;
 import hardware.Driver;
+import hardware.SoilAnalyser;
 import task.TaskList;
 
 public class RoverController {
   private ArrayList<TaskList> taskLists;
   private RoverState currentState;
   private Driver driver;
+  private Camera camera;
+  private SoilAnalyser soilAnalyser;
 
   public RoverController() {
     currentState = new RoverIdle();
@@ -15,6 +19,14 @@ public class RoverController {
 
   public Driver getDriver() {
     return driver;
+  }
+
+  public Camera getCamera() {
+    return camera;
+  }
+
+  public SoilAnalyser getSoilAnalyser() {
+    return soilAnalyser;
   }
 
   public void setState(RoverState newState) {
