@@ -9,11 +9,13 @@
 
 package hardware;
 
+import controller.RoverController;
+
 public class RoverDriver extends Driver {
   private RoverController controller;
 
   // This should not be able to be created without a RoverState of some kind.
-  private RoverDriver();
+  private RoverDriver() {};
 
   /*
    * Create the Rover driver for moving the Rover.
@@ -27,10 +29,10 @@ public class RoverDriver extends Driver {
   }
 
   public void moveFinished() {
-    state.setResultReady("RoverDriver: Move finished.");
+    controller.setResultReady("RoverDriver: Move finished.");
   }
 
   public void mechanicalError() {
-    state.setError("RoverDriver: Mechanical Error.");
+    controller.setErrorOccured("RoverDriver: Mechanical Error.");
   }
 }

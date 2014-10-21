@@ -4,23 +4,34 @@
 
 package controller;
 
+import task.TaskList;
+
 public class RoverResultReady extends RoverState {
   // We should be going to sending.
-  public void setIdle() {
+  public void setIdle(RoverController inContext) {
   }
 
   // Should be going to sending.
-  public void setReceiving() {
+  public void setReceiving(RoverController inContext,
+                           String message) {
   }
 
   // This is where we expect to go.
-  public void setSending() {
+  public void setSending(RoverController inContext,
+                         String message) {
   }
 
   // Try to send the task first.
-  public void setRunning() {
+  public void setRunning(RoverController inContext,
+                         TaskList inTaskList) {
   }
 
   // We already have results.
-  public void setResultReady() {}
+  public void setResultReady(RoverController inContext,
+                             String result) {
+  }
+
+  public void setErrorOccured(RoverController inContext,
+                              String error) {
+  }
 }

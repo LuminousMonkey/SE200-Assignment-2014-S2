@@ -3,17 +3,20 @@
 
 package hardware;
 
-public class RoverSoilAnalyser extends SoiolAnalyser {
+import controller.RoverController;
+
+public class RoverSoilAnalyser extends SoilAnalyser {
   private RoverController controller;
 
-  private RoverSoilAnalyser();
+  private RoverSoilAnalyser() {};
 
   public RoverSoilAnalyser(RoverController inController) {
+    super();
     controller = inController;
   }
 
   public void analysisReady(String soilAnalysis) {
     // Set result ready.
-    controller.setResultReady(soildAnalysis);
+    controller.setResultReady(soilAnalysis);
   }
 }
