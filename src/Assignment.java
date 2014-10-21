@@ -36,4 +36,8 @@ public class Assignment {
 
     currentComms = new EarthComm();
   }
+
+  private static void testReceive() {
+    currentComms.receive("L1 {M 95\nT 90\nP\nS\n}");
+  }
 }
