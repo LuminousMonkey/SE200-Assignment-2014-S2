@@ -1,5 +1,5 @@
 /*
- * TestComm
+ * MockComm
  *
  * Description:
  *  Test class for comms, since the method we want to trigger for
@@ -9,8 +9,8 @@
 
 package hardware;
 
-public class TestComm extends EarthComm {
-  public RoverComm() {
+public class MockComm extends EarthComm {
+  public MockComm() {
     super();
   }
 
