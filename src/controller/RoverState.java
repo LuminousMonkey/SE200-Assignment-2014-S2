@@ -46,6 +46,11 @@ public abstract class RoverState {
                                   int taskListId);
 
   /*
+   * Rover has run a executed a task and is now waiting for a result.
+   */
+  public abstract void setWaitingForResult(RoverController inContext);
+
+  /*
    * Task has finished and Rover needs to send the message back to Earth.
    */
   public abstract void setResultReady(RoverController inContext,

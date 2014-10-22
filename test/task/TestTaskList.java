@@ -15,16 +15,25 @@ import org.junit.Test;
 
 import controller.RoverController;
 import hardware.MockDriver;
+import hardware.MockCamera;
+import hardware.MockSoilAnalyser;
 
 public class TestTaskList {
   private RoverController context;
   private MockDriver driver;
+  private MockCamera camera;
+  private MockSoilAnalyser soilAnal;
 
   @Before
   public void setUp() {
     context = new RoverController();
     driver = new MockDriver(context);
+    camera = new MockCamera(context);
+    soilAnal = new MockSoilAnalyser(context);
+
     context.setDriver(driver);
+    context.setCamera(camera);
+    context.setSoilAnalyser(soilAnal);
   }
 
   @Test(expected=IllegalArgumentException.class)
@@ -74,5 +83,22 @@ public class TestTaskList {
 
     assertEquals(54.4, driver.getDistanceReceived(), 0.1);
     assertEquals(55.3, driver.getAngleReceived(), 0.1);
+  }
+
+  /*
+   * testAllDevices
+   *
+   * Add a list that includes all the devices.
+   */
+  @Test
+  public void testAllDevices() {
+    TaskList testTaskList = new TaskList(context,
+                                         "L1 {M 100\nT 10\nS\nP\n}");
+    testTaskList.execute();
+
+    assertEquals(100.0, driver.getDistanceReceived(), 0.1);
+    assertEquals(10.0, driver.getAngleReceived(), 0.1);
+    assertEquals(1, camera.getTakePhotoRequest());
+    assertEquals(1, soilAnal.getAnalyseRequest());
   }
 }

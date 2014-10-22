@@ -9,6 +9,7 @@ public class TaskList {
   private final static int HEADER_INVALID = -1;
   private int listId;
   private List<Task> tasks;
+  private RoverController roverContext;
 
   private TaskList() {}
 
@@ -19,6 +20,7 @@ public class TaskList {
    * checked before being passed in here.
    */
   public TaskList(RoverController context, String message) {
+    roverContext = context;
     tasks = new ArrayList<Task>();
 
     if (!message.isEmpty()) {
@@ -93,6 +95,8 @@ public class TaskList {
   public void execute() {
     for (Task task : tasks) {
       task.execute();
+
+      // Need to wait until we have a result.
     }
   }
 }

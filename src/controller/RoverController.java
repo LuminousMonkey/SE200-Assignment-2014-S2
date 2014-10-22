@@ -27,6 +27,9 @@ public class RoverController {
   private Camera camera;
   private SoilAnalyser soilAnalyser;
 
+  // Current running task list.
+  private TaskList currentTaskList;
+
   private String receivedMessage;
   private String errorMessage;
   private String result;
@@ -97,6 +100,10 @@ public class RoverController {
 
   public void setRunning(int taskListId) {
     currentState.setRunning(this, taskListId);
+  }
+
+  public void setWaitingForResult() {
+    currentState.setWaitingForResult(this);
   }
 
   public void setResultReady(String result) {

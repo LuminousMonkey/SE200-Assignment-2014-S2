@@ -39,6 +39,10 @@ public class RoverIdle extends RoverState {
     throw new IllegalStateException("Trying to run directly from idle.");
   }
 
+  public void setWaitingForResult(RoverController inContext) {
+    throw new IllegalStateException("Trying to wait for result too early.");
+  }
+
   // Results can't be ready until a task has finished, and since we
   // can't move on until the current task has finished we can't go
   // from idle to result ready.

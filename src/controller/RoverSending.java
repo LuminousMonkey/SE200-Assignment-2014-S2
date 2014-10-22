@@ -31,6 +31,10 @@ public class RoverSending extends RoverState {
                          int taskListId) {
   }
 
+  // Not waiting for a result when we're already sending.
+  public void setWaitingForResult(RoverController inContext) {
+  }
+
   // We're already sending a result.
   public void setResultReady(RoverController inContext,
                              String result) {

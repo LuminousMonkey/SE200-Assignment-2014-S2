@@ -42,6 +42,9 @@ public class RoverReceiving extends RoverState {
     inContext.execute(taskListId);
   }
 
+  public void setWaitingForResult(RoverController inContext) {
+  }
+
   /*
    * This shoudn't happen.
    */

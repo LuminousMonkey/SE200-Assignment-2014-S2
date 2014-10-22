@@ -1,27 +1,26 @@
 /*
- * RoverResultReady
+ * RoverWaiting
+ *
+ * Description
+ *  The state for when the Rover is waiting on a device to finish.
  */
 
 package controller;
 
 import task.TaskList;
 
-public class RoverResultReady extends RoverState {
-  // We should be going to sending.
+public class RoverWaiting extends RoverState {
   public void setIdle(RoverController inContext) {
   }
 
-  // Should be going to sending.
   public void setReceiving(RoverController inContext,
                            String message) {
   }
 
-  // This is where we expect to go.
   public void setSending(RoverController inContext,
                          String message) {
   }
 
-  // Try to send the task first.
   public void setRunning(RoverController inContext,
                          int taskListId) {
   }
@@ -29,12 +28,15 @@ public class RoverResultReady extends RoverState {
   public void setWaitingForResult(RoverController inContext) {
   }
 
-  // We already have results.
   public void setResultReady(RoverController inContext,
-                             String result) {
+                             String message) {
+    // Received a ready event from what we're waiting on.
+    inContext.setState(new RoverSending());
+    inContext.setSending(message);
   }
 
-  public void setErrorOccured(RoverController inContext,
-                              String error) {
+  public void setErrorOccured(RoverController inContext, String error) {
+    inContext.setState(new RoverSending());
+    inContext.setSending(error);
   }
 }

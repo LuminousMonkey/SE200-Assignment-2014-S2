@@ -44,11 +44,18 @@ public class RoverRunning extends RoverState {
     throw new IllegalStateException("Already running a task.");
   }
 
+  // When a task has been executed, then we're waiting for a result.
+  public void setWaitingForResult(RoverController inContext) {
+    inContext.setState(new RoverWaiting());
+  }
+
   /*
    * This shoudn't happen.
    */
   public void setResultReady(RoverController inContext,
                              String result) {
+    // There's a result ready.
+
   }
 
   public void setErrorOccured(RoverController inContext,
