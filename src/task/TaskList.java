@@ -1,5 +1,6 @@
 package task;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -10,6 +11,7 @@ public class TaskList {
   private int listId;
   private List<Task> tasks;
   private RoverController roverContext;
+  private Iterator<Task> listIterator;
 
   private TaskList() {}
 
@@ -46,6 +48,8 @@ public class TaskList {
       } else {
         throw new IllegalArgumentException("No instructions found");
       }
+
+      listIterator = tasks.iterator();
     }
   }
 
@@ -89,14 +93,14 @@ public class TaskList {
     return result;
   }
 
-  /*
-   * Execute
-   */
-  public void execute() {
-    for (Task task : tasks) {
-      task.execute();
+  public boolean hasNext() {
+    return listIterator.hasNext();
+  }
 
-      // Need to wait until we have a result.
+  public void execute() {
+    if (listIterator.hasNext()) {
+      Task currentTask = listIterator.next();
+      currentTask.execute();
     }
   }
 }

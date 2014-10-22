@@ -30,10 +30,10 @@ public class RoverDriver extends Driver {
   }
 
   public void moveFinished() {
-    context.setResultReady("RoverDriver: Move finished.");
+    context.result("Move finished.");
   }
 
   public void mechanicalError() {
-    context.setErrorOccured("RoverDriver: Mechanical Error.");
+    context.error("Mechanical Error");
   }
 }

@@ -19,6 +19,7 @@ public class ListExecuteTask extends Task {
   }
 
   public void execute() {
+    System.out.println("ListExecuteTask: " + listId);
     context.execute(listId);
   }
 }

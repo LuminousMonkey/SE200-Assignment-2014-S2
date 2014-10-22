@@ -19,6 +19,7 @@ public class EarthComm extends Comm {
   }
 
   protected void receive(String message) {
-    context.setReceiving(message);
+    context.addTaskList(message);
+    context.setRunning();
   }
 }

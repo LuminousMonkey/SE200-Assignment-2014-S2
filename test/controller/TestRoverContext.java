@@ -10,14 +10,17 @@
 package controller;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import hardware.MockDriver;
+import hardware.MockComm;
 
 public class TestRoverContext {
   private RoverController context;
   private MockDriver driver;
+  private MockComm comm;
 
   /*
    * testListExecuteList
@@ -35,6 +38,7 @@ public class TestRoverContext {
 
     // Execute list two, which should execute list 1 last.
     context.execute(2);
+    context.execute();
 
     // Should be the distance and angle from the first list.
     assertEquals(100.0, driver.getDistanceReceived(), 0.1);
@@ -64,10 +68,34 @@ public class TestRoverContext {
     assertEquals(50.0, driver.getAngleReceived(), 0.1);
   }
 
+  /*
+   * testBasicTaskFlow
+   *
+   * Description
+   *  Test receving a message, getting a response, then sending the
+   *  response back.
+   */
+  @Test
+  public void testBasicTaskFlow() {
+    newContext();
+
+    assertTrue(context.getState() instanceof RoverIdle);
+
+    System.out.println(context.getState().toString());
+
+    comm.testReceive("L1 {M 100\n}");
+
+    System.out.println(context.getState().toString());
+
+    assertTrue(context.getState() instanceof RoverRunning);
+  }
+
   private void newContext() {
     context = new RoverController();
     driver = new MockDriver(context);
+    comm = new MockComm(context);
 
     context.setDriver(driver);
+    context.setComm(comm);
   }
 }

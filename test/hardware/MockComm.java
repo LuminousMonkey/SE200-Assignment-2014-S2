@@ -16,6 +16,11 @@ public class MockComm extends EarthComm {
     super(inContext);
   }
 
+  @Override
+  public void send(String message) {
+    System.out.println("Sending: " + message);
+  }
+
   /*
    * testReceive
    *

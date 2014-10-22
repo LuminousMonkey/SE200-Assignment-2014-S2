@@ -10,14 +10,14 @@ package hardware;
 import controller.RoverController;
 
 public class RoverCamera extends Camera {
-  private RoverController controller;
+  private RoverController context;
 
   // Be sure we're provided with a context.
   private RoverCamera() {}
 
-  public RoverCamera(RoverController inController) {
+  public RoverCamera(RoverController inContext) {
     super();
-    controller = inController;
+    context = inContext;
   }
 
   protected void photoReady(char[] photoData) {

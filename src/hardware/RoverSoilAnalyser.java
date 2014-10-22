@@ -6,17 +6,17 @@ package hardware;
 import controller.RoverController;
 
 public class RoverSoilAnalyser extends SoilAnalyser {
-  private RoverController controller;
+  private RoverController context;
 
   private RoverSoilAnalyser() {};
 
-  public RoverSoilAnalyser(RoverController inController) {
+  public RoverSoilAnalyser(RoverController inContext) {
     super();
-    controller = inController;
+    context = inContext;
   }
 
   public void analysisReady(String soilAnalysis) {
     // Set result ready.
-    controller.setResultReady(soilAnalysis);
+    context.result(soilAnalysis);
   }
 }

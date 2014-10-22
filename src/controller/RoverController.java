@@ -18,6 +18,8 @@ import java.util.LinkedHashSet;
 import hardware.Camera;
 import hardware.Driver;
 import hardware.SoilAnalyser;
+import hardware.Comm;
+
 import task.TaskList;
 
 public class RoverController {
@@ -26,6 +28,7 @@ public class RoverController {
   private Driver driver;
   private Camera camera;
   private SoilAnalyser soilAnalyser;
+  private Comm comm;
 
   // Current running task list.
   private TaskList currentTaskList;
@@ -59,6 +62,14 @@ public class RoverController {
     camera = inCamera;
   }
 
+  public Comm getComm() {
+    return comm;
+  }
+
+  public void setComm(Comm inComm) {
+    comm = inComm;
+  }
+
   public SoilAnalyser getSoilAnalyser() {
     return soilAnalyser;
   }
@@ -87,31 +98,8 @@ public class RoverController {
     currentState.setIdle(this);
   }
 
-  public void setReceiving(String message) {
-    // If this state is invalid, then it will throw an exception. So
-    // we can proceed with adding and parsing the message to the
-    // TaskList.
-    currentState.setReceiving(this, message);
-  }
-
-  public void setSending(String message) {
-    currentState.setSending(this, message);
-  }
-
-  public void setRunning(int taskListId) {
-    currentState.setRunning(this, taskListId);
-  }
-
-  public void setWaitingForResult() {
-    currentState.setWaitingForResult(this);
-  }
-
-  public void setResultReady(String result) {
-    currentState.setResultReady(this, result);
-  }
-
-  public void setErrorOccured(String error) {
-    currentState.setErrorOccured(this, error);
+  public void setRunning() {
+    currentState.setRunning(this);
   }
 
   public void addTaskList(String message) {
@@ -121,9 +109,19 @@ public class RoverController {
   }
 
   public void execute(int taskListId) {
-    TaskList taskListToAdd = taskLists.get(taskListId);
+    currentTaskList = taskLists.get(taskListId);
 
-    taskListToAdd.execute();
+    currentTaskList.execute();
+  }
+
+  public void execute() {
+    currentTaskList.execute();
+  }
+
+  public void result(String inResult) {
+  }
+
+  public void error(String inResult) {
   }
 
   /*

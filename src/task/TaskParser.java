@@ -25,20 +25,20 @@ public class TaskParser {
 
     Task result = null;
 
-    switch (tokens[0]) {
-      case "M":
+    switch (tokens[0].charAt(0)) {
+      case 'M':
         result = new MoveTask(context, Double.parseDouble(tokens[1]));
         break;
-      case "T":
+      case 'T':
         result = new TurnTask(context, Double.parseDouble(tokens[1]));
         break;
-      case "S":
+      case 'S':
         result = new SoilAnalysisTask(context);
         break;
-      case "P":
+      case 'P':
         result = new PhotoTask(context);
         break;
-      case "L":
+      case 'L':
         result = new ListExecuteTask(context, Integer.parseInt(tokens[1]));
         break;
       default:
