@@ -38,6 +38,9 @@ public class TaskParser {
       case "P":
         result = new PhotoTask(context);
         break;
+      case "L":
+        result = new ListExecuteTask(context, Integer.parseInt(tokens[1]));
+        break;
       default:
         throw new TaskParseException("Unknown Task given.");
     }

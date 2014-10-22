@@ -43,7 +43,7 @@ public abstract class RoverState {
    * can happen until it completes.
    */
   public abstract void setRunning(RoverController inContext,
-                                  TaskList inTaskList);
+                                  int taskListId);
 
   /*
    * Task has finished and Rover needs to send the message back to Earth.

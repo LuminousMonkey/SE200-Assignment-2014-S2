@@ -1,5 +1,5 @@
 /*
- * RoverReceiving
+ * RoverRunning
  *
  * Description:
  *  The Rover enters this state when receiving a message from Earth.
@@ -9,7 +9,7 @@ package controller;
 
 import task.TaskList;
 
-public class RoverReceiving extends RoverState {
+public class RoverRunning extends RoverState {
   /*
    * The Rover can only go into the idle state from receiving if there
    * was an error with the message from Earth.
@@ -18,10 +18,13 @@ public class RoverReceiving extends RoverState {
   }
 
   /*
-   * This shouldn't happen, we're already receiving!
+   * If we get any lists from Earth while we're running, then add
+   * them, but delay execution until we've finished the current list.
    */
   public void setReceiving(RoverController inContext,
                            String message) {
+    // We don't change state here (probably remove the receving state.)
+    inContext.addTaskList(message);
   }
 
   /*
@@ -38,8 +41,7 @@ public class RoverReceiving extends RoverState {
    */
   public void setRunning(RoverController inContext,
                          int taskListId) {
-    inContext.setState(new RoverRunning());
-    inContext.execute(taskListId);
+    throw new IllegalStateException("Already running a task.");
   }
 
   /*

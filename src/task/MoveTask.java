@@ -29,7 +29,7 @@ public class MoveTask extends Task {
 
   public void execute() {
     // Start the move.
-    controller.getDriver().drive(distance);
+    context.getDriver().drive(distance);
   }
 
   public double getDistance() {

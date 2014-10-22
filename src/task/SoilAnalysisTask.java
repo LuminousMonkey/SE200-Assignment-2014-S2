@@ -16,6 +16,6 @@ public class SoilAnalysisTask extends Task {
   }
 
   public void execute() {
-    controller.getSoilAnalyser().analyse();
+    context.getSoilAnalyser().analyse();
   }
 }

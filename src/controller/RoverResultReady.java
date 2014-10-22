@@ -23,7 +23,7 @@ public class RoverResultReady extends RoverState {
 
   // Try to send the task first.
   public void setRunning(RoverController inContext,
-                         TaskList inTaskList) {
+                         int taskListId) {
   }
 
   // We already have results.

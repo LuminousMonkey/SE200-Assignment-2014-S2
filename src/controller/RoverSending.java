@@ -28,7 +28,7 @@ public class RoverSending extends RoverState {
   // Once it finishes sending the results to Earth, it should try
   // running the next task in the list.
   public void setRunning(RoverController inContext,
-                         TaskList inTaskList) {
+                         int taskListId) {
   }
 
   // We're already sending a result.

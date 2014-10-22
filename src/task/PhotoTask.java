@@ -16,6 +16,6 @@ public class PhotoTask extends Task {
   }
 
   public void execute() {
-    controller.getCamera().takePhoto();
+    context.getCamera().takePhoto();
   }
 }

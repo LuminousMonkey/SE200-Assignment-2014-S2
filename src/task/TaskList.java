@@ -87,4 +87,12 @@ public class TaskList {
     return result;
   }
 
+  /*
+   * Execute
+   */
+  public void execute() {
+    for (Task task : tasks) {
+      task.execute();
+    }
+  }
 }
