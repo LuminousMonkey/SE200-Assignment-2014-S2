@@ -24,7 +24,6 @@ import task.TaskList;
 
 public class RoverController {
   private HashMap<Integer,TaskList> taskLists;
-  private RoverState currentState;
   private Driver driver;
   private Camera camera;
   private SoilAnalyser soilAnalyser;
@@ -33,15 +32,10 @@ public class RoverController {
   // Current running task list.
   private TaskList currentTaskList;
 
-  private String receivedMessage;
-  private String errorMessage;
-  private String result;
-
   // Lists that are pending to be executed.
   private HashSet<Integer> pendingLists;
 
   public RoverController() {
-    currentState = new RoverIdle();
     taskLists = new HashMap<Integer,TaskList>();
     pendingLists = new LinkedHashSet<Integer>();
   }
@@ -74,32 +68,8 @@ public class RoverController {
     return soilAnalyser;
   }
 
-  public void setMessage(String inMessage) {
-    receivedMessage = inMessage;
-  }
-
-  public String getMessage() {
-    return receivedMessage;
-  }
-
   public void setSoilAnalyser(SoilAnalyser inAnalyser) {
     soilAnalyser = inAnalyser;
-  }
-
-  public void setState(RoverState newState) {
-    currentState = newState;
-  }
-
-  public RoverState getState() {
-    return currentState;
-  }
-
-  public void setIdle() {
-    currentState.setIdle(this);
-  }
-
-  public void setRunning() {
-    currentState.setRunning(this);
   }
 
   public void addTaskList(String message) {
@@ -109,30 +79,56 @@ public class RoverController {
   }
 
   public void execute(int taskListId) {
+    System.out.println("execute: initial list exe.");
     currentTaskList = taskLists.get(taskListId);
-
+    currentTaskList.resetListCursor();
     currentTaskList.execute();
   }
 
   public void execute() {
-    currentTaskList.execute();
+    if (currentTaskList.hasNext()) {
+      System.out.println("Executing next task in list.");
+      currentTaskList.execute();
+    } else {
+      // No more tasks in the current list, execute anything pending.
+      System.out.println("Trying to execute next pending list.");
+      executePending();
+    }
   }
 
-  public void result(String inResult) {
+  public void setResult(String inResult) {
+    // Send the result back.
+    comm.send(inResult);
+    execute();
   }
 
-  public void error(String inResult) {
+  /*
+   * setError
+   *
+   * If an error occurs, stop executing anymore tasks in the current
+   * tasklist. Send a message back to Earth saying there was an error,
+   * and start any pending task lists.
+   */
+  public void setError(String inError) {
+    // Send the error back to earth.
+    comm.send(inError);
+
+    // Move onto the next task list.
+    executePending();
   }
 
   /*
    * executePending
    *
-   * Execute any pending tasks lists that have been added while we've
-   * been running.
+   * Get the next list that is pending to be executed.
    */
   public void executePending() {
-    for (Iterator<Integer> i = pendingLists.iterator(); i.hasNext();) {
+    // Just get the first one.
+
+    Iterator<Integer> i = pendingLists.iterator();
+    if (i.hasNext()) {
       Integer element = i.next();
+      System.out.println("Pending exe list: " + element);
 
       execute(element);
       i.remove();

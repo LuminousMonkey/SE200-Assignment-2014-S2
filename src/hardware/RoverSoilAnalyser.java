@@ -17,6 +17,6 @@ public class RoverSoilAnalyser extends SoilAnalyser {
 
   public void analysisReady(String soilAnalysis) {
     // Set result ready.
-    context.result(soilAnalysis);
+    context.setResult(soilAnalysis);
   }
 }

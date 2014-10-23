@@ -93,6 +93,10 @@ public class TaskList {
     return result;
   }
 
+  public void resetListCursor() {
+    listIterator = tasks.iterator();
+  }
+
   public boolean hasNext() {
     return listIterator.hasNext();
   }
@@ -101,6 +105,8 @@ public class TaskList {
     if (listIterator.hasNext()) {
       Task currentTask = listIterator.next();
       currentTask.execute();
+    } else {
+      System.out.println("No more tasks in this list.");
     }
   }
 }

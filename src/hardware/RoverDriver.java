@@ -12,8 +12,8 @@ package hardware;
 import controller.RoverController;
 
 public class RoverDriver extends Driver {
-  // Need the context to call when an event occurs.
-  private RoverController context;
+  // Need the controller to call when an event occurs.
+  private RoverController controller;
 
   // This should not be able to be created without a RoverState of some kind.
   private RoverDriver() {};
@@ -24,16 +24,16 @@ public class RoverDriver extends Driver {
    * state - RoverState which to use for updates to the status. i.e.
    * moveFinshed, mechanicalError
    */
-  public RoverDriver(RoverController inContext) {
+  public RoverDriver(RoverController inController) {
     super();
-    context = inContext;
+    controller = inController;
   }
 
   public void moveFinished() {
-    context.result("Move finished.");
+    controller.setResult("Move finished.");
   }
 
   public void mechanicalError() {
-    context.error("Mechanical Error");
+    controller.setError("Mechanical Error");
   }
 }

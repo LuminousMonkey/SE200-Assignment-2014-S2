@@ -38,10 +38,17 @@ public class TestRoverContext {
 
     // Execute list two, which should execute list 1 last.
     context.execute(2);
-    context.execute();
+    assertEquals(50.0, driver.getDistanceReceived(), 0.1);
 
-    // Should be the distance and angle from the first list.
+    context.execute();
+    assertEquals(25.0, driver.getAngleReceived(), 0.1);
+
+    // Told to start executing the new list, will run the next task in
+    // the new list straight away.
+    context.execute();
     assertEquals(100.0, driver.getDistanceReceived(), 0.1);
+
+    context.execute();
     assertEquals(50.0, driver.getAngleReceived(), 0.1);
   }
 
@@ -56,16 +63,23 @@ public class TestRoverContext {
   public void testPendingExecuted() {
     newContext();
 
+    System.out.println("testPendingExecuted");
+
     // Add out two lists.
     context.addTaskList("L1 {M 100\nT 50}");
     context.addTaskList("L2 {M 50\nT 25\nL 1}");
 
-    // Execute list two, which should execute list 1 last.
+    // Execute the lists.
+    // Will run the first task in the first pending list.
     context.executePending();
+    assertEquals(100.0, driver.getDistanceReceived(), 0.1);
 
     // Should be the distance and angle from the first list.
-    assertEquals(100.0, driver.getDistanceReceived(), 0.1);
+    context.execute();
     assertEquals(50.0, driver.getAngleReceived(), 0.1);
+
+    // Now it should be waiting for the first results
+    context.setResult("Move Successful");
   }
 
   /*
@@ -78,16 +92,7 @@ public class TestRoverContext {
   @Test
   public void testBasicTaskFlow() {
     newContext();
-
-    assertTrue(context.getState() instanceof RoverIdle);
-
-    System.out.println(context.getState().toString());
-
     comm.testReceive("L1 {M 100\n}");
-
-    System.out.println(context.getState().toString());
-
-    assertTrue(context.getState() instanceof RoverRunning);
   }
 
   private void newContext() {

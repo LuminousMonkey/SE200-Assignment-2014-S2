@@ -10,16 +10,15 @@ package hardware;
 import controller.RoverController;
 
 public class EarthComm extends Comm {
-  private RoverController context;
+  private RoverController controller;
 
   private EarthComm() {}
 
-  public EarthComm(RoverController inContext) {
-    context = inContext;
+  public EarthComm(RoverController inController) {
+    controller = inController;
   }
 
   protected void receive(String message) {
-    context.addTaskList(message);
-    context.setRunning();
+    controller.addTaskList(message);
   }
 }

@@ -67,22 +67,11 @@ public class TestTaskList {
   public void testListExecute() {
     TaskList testTaskList = new TaskList(context, "L1 {M 100\n}");
     testTaskList.execute();
-
     assertEquals(100.0, driver.getDistanceReceived(), 0.1);
 
     testTaskList = new TaskList(context, "L2 {T -15\n}");
     testTaskList.execute();
-
     assertEquals(-15.0, driver.getAngleReceived(), 0.1);
-  }
-
-  @Test
-  public void testListMultipleExecute() {
-    TaskList testTaskList = new TaskList(context, "L4 {M 54.4\nT 55.3}");
-    testTaskList.execute();
-
-    assertEquals(54.4, driver.getDistanceReceived(), 0.1);
-    assertEquals(55.3, driver.getAngleReceived(), 0.1);
   }
 
   /*
@@ -94,7 +83,9 @@ public class TestTaskList {
   public void testAllDevices() {
     TaskList testTaskList = new TaskList(context,
                                          "L1 {M 100\nT 10\nS\nP\n}");
-    testTaskList.execute();
+    for (int i = 0; i < 4; i++) {
+      testTaskList.execute();
+    }
 
     assertEquals(100.0, driver.getDistanceReceived(), 0.1);
     assertEquals(10.0, driver.getAngleReceived(), 0.1);

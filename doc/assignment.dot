@@ -1,6 +1,7 @@
 digraph G {
-        fontname = "Concourse T7"
-        fontsize = 13
+        fontname = "Concourse T7";
+        fontsize = 13;
+        splines = ortho;
 
         node [
              shape = "plaintext";
@@ -14,15 +15,6 @@ digraph G {
                              <tr><td>+ send : String</td></tr>
                              <tr><td># <i>receive : String</i></td></tr>
                       </table>>
-        ]
-
-        EarthComm [
-                label = <<table border="1" cellborder="0" cellspacing="0">
-                                <tr><td>EarthComm</td></tr>
-                                <hr/>
-                                <tr><td>+ send : String</td></tr>
-                                <tr><td># <i>receive : String</i></td></tr>
-                         </table>>
         ]
 
         Driver [
@@ -55,6 +47,15 @@ digraph G {
                                <tr><td># <i>photoReady(photoData : char[])</i></td></tr>
                         </table>>
 
+        ]
+
+        RoverComm [
+                label = <<table border="1" cellborder="0" cellspacing="0">
+                                <tr><td>EarthComm</td></tr>
+                                <hr/>
+                                <tr><td>+ send : String</td></tr>
+                                <tr><td># <i>receive : String</i></td></tr>
+                         </table>>
         ]
 
         RoverDriver [
@@ -108,15 +109,6 @@ digraph G {
         ]
 
 
-        RoverController [
-               label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>RoverController</td></tr>
-                               <hr/>
-                               <tr><td># <i>execute()</i></td></tr>
-                        </table>>
-
-        ]
-
         MoveTask [
                label = <<table border="1" cellborder="0" cellspacing="0">
                                <tr><td>MoveTask</td></tr>
@@ -153,85 +145,33 @@ digraph G {
 
         ]
 
-        RoverState [
+        ListExecuteTask [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>RoverState</td></tr>
+                               <tr><td>ListExecuteTask</td></tr>
                                <hr/>
-                               <tr><td>+ <i>setIdle()</i></td></tr>
-                               <tr><td>+ <i>setReceiving()</i></td></tr>
-                               <tr><td>+ <i>setSending()</i></td></tr>
-                               <tr><td>+ <i>setRunning()</i></td></tr>
-                               <tr><td>+ <i>setResultReady()</i></td></tr>
-                        </table>>
-        ]
-
-        RoverIdle [
-               label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>RoverIdle</td></tr>
-                               <hr/>
-                               <tr><td>+ <i>setIdle()</i></td></tr>
-                               <tr><td>+ <i>setReceiving()</i></td></tr>
-                               <tr><td>+ <i>setSending()</i></td></tr>
-                               <tr><td>+ <i>setRunning()</i></td></tr>
-                               <tr><td>+ <i>setResultReady()</i></td></tr>
+                               <tr><td>+ execute()</td></tr>
                         </table>>
 
         ]
 
-        RoverReceiving [
+        TaskParser [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>RoverReceiving</td></tr>
+                               <tr><td>TaskParser</td></tr>
                                <hr/>
-                               <tr><td>+ <i>setIdle()</i></td></tr>
-                               <tr><td>+ <i>setReceiving()</i></td></tr>
-                               <tr><td>+ <i>setSending()</i></td></tr>
-                               <tr><td>+ <i>setRunning()</i></td></tr>
-                               <tr><td>+ <i>setResultReady()</i></td></tr>
+                               <tr><td>+ parse()</td></tr>
                         </table>>
 
         ]
 
-        RoverSending [
+        RoverController [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>RoverSending</td></tr>
-                               <hr/>
-                               <tr><td>+ <i>setIdle()</i></td></tr>
-                               <tr><td>+ <i>setReceiving()</i></td></tr>
-                               <tr><td>+ <i>setSending()</i></td></tr>
-                               <tr><td>+ <i>setRunning()</i></td></tr>
-                               <tr><td>+ <i>setResultReady()</i></td></tr>
-                        </table>>
-
-        ]
-
-        RoverRunning [
-               label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>RoverRunning</td></tr>
-                               <hr/>
-                               <tr><td>+ <i>setIdle()</i></td></tr>
-                               <tr><td>+ <i>setReceiving()</i></td></tr>
-                               <tr><td>+ <i>setSending()</i></td></tr>
-                               <tr><td>+ <i>setRunning()</i></td></tr>
-                               <tr><td>+ <i>setResultReady()</i></td></tr>
-                        </table>>
-
-        ]
-
-        RoverResultReady [
-               label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>RoverResultReady</td></tr>
-                               <hr/>
-                               <tr><td>+ <i>setIdle()</i></td></tr>
-                               <tr><td>+ <i>setReceiving()</i></td></tr>
-                               <tr><td>+ <i>setSending()</i></td></tr>
-                               <tr><td>+ <i>setRunning()</i></td></tr>
-                               <tr><td>+ <i>setResultReady()</i></td></tr>
+                               <tr><td>RoverController</td></tr>
                         </table>>
 
         ]
 
         edge [ arrowhead = "empty" ];
-        EarthComm -> Comm;
+        RoverComm -> Comm;
         RoverDriver -> Driver;
         RoverSoilAnalyser -> SoilAnalyser;
         RoverCamera -> Camera;
@@ -241,21 +181,32 @@ digraph G {
         AnalyserTask -> Task;
         CameraTask -> Task;
 
+        edge [ arrowhead = "odiamond" ];
+        Task -> TaskList;
+        RoverController -> TaskList;
+
+        edge [ arrowhead = "vee" ];
         MoveTask -> RoverDriver;
         TurnTask -> RoverDriver;
         AnalyserTask -> RoverSoilAnalyser;
         CameraTask -> RoverCamera;
 
-        RoverController -> EarthComm;
+        TaskParser -> MoveTask;
+        TaskParser -> TurnTask;
+        TaskParser -> AnalyserTask;
+        TaskParser -> CameraTask;
+        TaskParser -> ListExecuteTask;
 
-        RoverIdle -> RoverState;
-        RoverReceiving -> RoverState;
-        RoverSending -> RoverState;
-        RoverRunning -> RoverState;
-        RoverResultReady -> RoverState;
+        TaskParser -> RoverDriver;
+        TaskParser -> RoverSoilAnalyser;
+        TaskParser -> RoverCamera;
+        TaskParser -> TaskList;
 
-        edge [ arrowhead = "odiamond" ];
-        Task -> TaskList;
-        TaskList -> RoverController;
-        RoverState -> RoverController;
+        RoverController -> RoverComm;
+
+        RoverDriver -> RoverController;
+        RoverSoilAnalyser -> RoverController;
+        RoverCamera -> RoverController;
+
+        ListExecuteTask -> TaskList;
 }
