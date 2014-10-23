@@ -81,7 +81,6 @@ public class TaskList {
   private int parseHeader(String header) {
     int result = HEADER_INVALID;
 
-    System.out.println("Header string is: " + header);
     if (header.charAt(0) == 'L') {
       try {
         result = Integer.parseInt(header.substring(1).trim());
@@ -105,8 +104,6 @@ public class TaskList {
     if (listIterator.hasNext()) {
       Task currentTask = listIterator.next();
       currentTask.execute();
-    } else {
-      System.out.println("No more tasks in this list.");
     }
   }
 }

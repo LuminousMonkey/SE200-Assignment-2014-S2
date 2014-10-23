@@ -79,7 +79,6 @@ public class RoverController {
   }
 
   public void execute(int taskListId) {
-    System.out.println("execute: initial list exe.");
     currentTaskList = taskLists.get(taskListId);
     currentTaskList.resetListCursor();
     currentTaskList.execute();
@@ -87,11 +86,9 @@ public class RoverController {
 
   public void execute() {
     if (currentTaskList.hasNext()) {
-      System.out.println("Executing next task in list.");
       currentTaskList.execute();
     } else {
       // No more tasks in the current list, execute anything pending.
-      System.out.println("Trying to execute next pending list.");
       executePending();
     }
   }
@@ -128,8 +125,6 @@ public class RoverController {
     Iterator<Integer> i = pendingLists.iterator();
     if (i.hasNext()) {
       Integer element = i.next();
-      System.out.println("Pending exe list: " + element);
-
       execute(element);
       i.remove();
     }

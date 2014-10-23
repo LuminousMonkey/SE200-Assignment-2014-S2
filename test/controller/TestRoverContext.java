@@ -16,11 +16,13 @@ import org.junit.Test;
 
 import hardware.MockDriver;
 import hardware.MockComm;
+import hardware.MockCamera;
 
 public class TestRoverContext {
   private RoverController context;
   private MockDriver driver;
   private MockComm comm;
+  private MockCamera camera;
 
   /*
    * testListExecuteList
@@ -63,8 +65,6 @@ public class TestRoverContext {
   public void testPendingExecuted() {
     newContext();
 
-    System.out.println("testPendingExecuted");
-
     // Add out two lists.
     context.addTaskList("L1 {M 100\nT 50}");
     context.addTaskList("L2 {M 50\nT 25\nL 1}");
@@ -77,9 +77,6 @@ public class TestRoverContext {
     // Should be the distance and angle from the first list.
     context.execute();
     assertEquals(50.0, driver.getAngleReceived(), 0.1);
-
-    // Now it should be waiting for the first results
-    context.setResult("Move Successful");
   }
 
   /*
@@ -92,15 +89,86 @@ public class TestRoverContext {
   @Test
   public void testBasicTaskFlow() {
     newContext();
-    comm.testReceive("L1 {M 100\n}");
+
+    comm.testReceive("L1 {M 100\nT 50}");
+
+    // It's received, but it won't execute until told.
+    context.executePending();
+    assertEquals(100.00, driver.getDistanceReceived(), 0.1);
+
+    // It has issued the move, and will not proceed until it gets a
+    // result.
+    driver.testMoveFinished();
+
+    // It should have send the result back, and execute the next task.
+    assertEquals(50.0, driver.getAngleReceived(), 0.1);
+  }
+
+  /*
+   * testFlowWithErrors
+   *
+   * Test that when we have an error on a task, it will stop the
+   * current list and move onto the next pending task list.
+   */
+  @Test
+  public void testFlowWithErrors() {
+    newContext();
+
+    comm.testReceive("L1 {M 45.4\nT 15\nP\nM 14.6\nS}");
+    comm.testReceive("L2 {P\nP\nP\nS}");
+
+    // We get it to execute the pending tasks, this will get it to run
+    // the first task in L1
+    context.executePending();
+    assertEquals(45.4, driver.getDistanceReceived(), 0.1);
+
+    driver.testMoveFinished();
+
+    // Since the move has finished, it should have moved onto the next
+    // command.
+    assertEquals(15.0, driver.getAngleReceived(), 0.1);
+
+    driver.testMechanicalError();
+
+    // An error occured, should be taking a photo now.
+    assertEquals(1, camera.getTakePhotoRequest());
+  }
+
+  /*
+   * testReceiveMessageWhenRunning
+   *
+   * Test that new task lists will get added to the pending list when
+   * the Rover is waiting for a result from moving, soil analysis,
+   * etc.
+   */
+  @Test
+  public void testReceiveMessageWhenRunning() {
+    newContext();
+
+    comm.testReceive("L1 {M 22\n}");
+
+    context.executePending();
+    assertEquals(22.0, driver.getDistanceReceived(), 0.1);
+
+    // The rover is now waiting for the "moveFinished" event.
+    // Send another message from Earth.
+    comm.testReceive("L2 {M 88.5}");
+
+    // Now, if we send a testMoveFinished event, it should execute the
+    // new list.
+    driver.testMoveFinished();
+
+    assertEquals(88.5, driver.getDistanceReceived(), 0.1);
   }
 
   private void newContext() {
     context = new RoverController();
     driver = new MockDriver(context);
     comm = new MockComm(context);
+    camera = new MockCamera(context);
 
     context.setDriver(driver);
     context.setComm(comm);
+    context.setCamera(camera);
   }
 }

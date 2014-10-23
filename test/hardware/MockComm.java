@@ -12,12 +12,16 @@ package hardware;
 import controller.RoverController;
 
 public class MockComm extends EarthComm {
+  private String messageSent;
+
   public MockComm(RoverController inContext) {
     super(inContext);
+    messageSent = "";
   }
 
   @Override
   public void send(String message) {
+    messageSent = message;
     System.out.println("Sending: " + message);
   }
 
