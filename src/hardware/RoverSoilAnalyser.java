@@ -17,7 +17,7 @@ public class RoverSoilAnalyser extends SoilAnalyser {
 
   @Override
   public void analyse() {
-    System.out.println("Request for photo.");
+    System.out.println("Request for soil analysis.");
     SoilAnalyserThread responseThread = new SoilAnalyserThread();
     Thread t = new Thread(responseThread);
     t.start();

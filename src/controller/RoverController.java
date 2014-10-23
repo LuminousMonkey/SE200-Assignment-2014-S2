@@ -75,10 +75,6 @@ public class RoverController {
     soilAnalyser = inAnalyser;
   }
 
-  public void setTaskListManager(TaskListManager inTaskListManager) {
-    taskListManager = inTaskListManager;
-  }
-
   public TaskListManager getTaskListManager() {
     return taskListManager;
   }

@@ -2,6 +2,8 @@
  * SE 200 Assignment
  *
  * Author: Mike Aldred
+ * Student No: 09831542
+ *
  */
 
 import java.util.Random;
@@ -28,21 +30,15 @@ public class Assignment {
 
   private static Random randGen = new Random();
 
-  /*
-   * This is just a test main for now, it should be removed into the unit tests.
-   */
   public static void main(String[] args) {
-    // Init all the classes.
     controller = new RoverController();
-
     comm = new EarthComm(controller);
 
     for (int i = 0; i < 10; i++) {
       comm.receive(listGenerator());
-      controller.getTaskListManager().executePending();
 
       try {
-        Thread.sleep(500);
+        Thread.sleep((randGen.nextInt(5) + 3) * 1000);
       } catch (InterruptedException e) {
         System.out.println("Main thread interrupted.");
       }

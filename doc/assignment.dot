@@ -2,15 +2,20 @@ digraph G {
         fontname = "Concourse T7";
         fontsize = 13;
 
+        splines = ortho;
+
         node [
              shape = "plaintext";
              margin = 0;
         ]
 
         subgraph cluster_hardware {
+                 color = "red";
+                 label = "Hardware";
+
                  Comm [
                       label = <<table border="1" cellborder="0" cellspacing="0">
-                                      <tr><td>Comm</td></tr>
+                      <tr><td bgcolor="#16355b"><font color="white">Comm</font></td></tr>
                                       <hr/>
                                       <tr><td>+ send : String</td></tr>
                                       <tr><td># <i>receive : String</i></td></tr>
@@ -19,7 +24,7 @@ digraph G {
 
                 Driver [
                        label = <<table border="1" cellborder="0" cellspacing="0">
-                                       <tr><td>Driver</td></tr>
+                       <tr><td bgcolor="#16355b"><font color="white">Driver</font></td></tr>
                                        <hr/>
                                        <tr><td>+ drive(distance : double)</td></tr>
                                        <tr><td>+ turn(angle : double)</td></tr>
@@ -31,7 +36,7 @@ digraph G {
 
         SoilAnalyser [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>SoilAnalyser</td></tr>
+               <tr><td bgcolor="#16355b"><font color="white">SoilAnalyser</font></td></tr>
                                <hr/>
                                <tr><td>+ analyse()</td></tr>
                                <tr><td># <i>analysisReady(soilAnalysis : String)</i></td></tr>
@@ -41,7 +46,7 @@ digraph G {
 
         Camera [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>Camera</td></tr>
+               <tr><td bgcolor="#16355b"><font color="white">Camera</font></td></tr>
                                <hr/>
                                <tr><td>+ takePhoto()</td></tr>
                                <tr><td># <i>photoReady(photoData : char[])</i></td></tr>
@@ -51,16 +56,16 @@ digraph G {
 
         RoverComm [
                 label = <<table border="1" cellborder="0" cellspacing="0">
-                                <tr><td>EarthComm</td></tr>
+                <tr><td bgcolor="#16355b"><font color="white">EarthComm</font></td></tr>
                                 <hr/>
                                 <tr><td>+ send : String</td></tr>
-                                <tr><td># <i>receive : String</i></td></tr>
+                                <tr><td>+ receive : String</td></tr>
                          </table>>
         ]
 
         RoverDriver [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>RoverDriver</td></tr>
+               <tr><td bgcolor="#16355b"><font color="white">RoverDriver</font></td></tr>
                                <hr/>
                                <tr><td>+ drive(distance : double)</td></tr>
                                <tr><td>+ turn(angle : double)</td></tr>
@@ -72,7 +77,7 @@ digraph G {
 
         RoverSoilAnalyser [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>RoverSoilAnalyser</td></tr>
+               <tr><td bgcolor="#16355b"><font color="white">RoverSoilAnalyser</font></td></tr>
                                <hr/>
                                <tr><td>+ analyse()</td></tr>
                                <tr><td># <i>analysisReady(soilAnalysis : String)</i></td></tr>
@@ -82,7 +87,7 @@ digraph G {
 
         RoverCamera [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>RoverCamera</td></tr>
+               <tr><td bgcolor="#16355b"><font color="white">RoverCamera</font></td></tr>
                                <hr/>
                                <tr><td>+ takePhoto()</td></tr>
                                <tr><td># <i>photoReady(photoData : char[])</i></td></tr>
@@ -92,9 +97,11 @@ digraph G {
         }
 
 subgraph cluster_task {
+         label = "Task";
+         color = "blue";
         Task [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>Task &lt;interface&gt;</td></tr>
+               <tr><td bgcolor="#16355b"><font color="white">Task &lt;interface&gt;</font></td></tr>
                                <hr/>
                                <tr><td># <i>execute()</i></td></tr>
                         </table>>
@@ -103,7 +110,7 @@ subgraph cluster_task {
 
         TaskList [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>TaskList</td></tr>
+               <tr><td bgcolor="#16355b"><font color="white">TaskList</font></td></tr>
                                <hr/>
                                <tr><td> add(toAdd : Task)</td></tr>
                         </table>>
@@ -113,7 +120,9 @@ subgraph cluster_task {
 
         MoveTask [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>MoveTask</td></tr>
+               <tr><td bgcolor="#16355b"><font color="white">MoveTask</font></td></tr>
+                               <hr/>
+                               <tr><td>driver : Driver</td></tr>
                                <hr/>
                                <tr><td>+ execute()</td></tr>
                         </table>>
@@ -122,25 +131,31 @@ subgraph cluster_task {
 
         TurnTask [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>TurnTask</td></tr>
+               <tr><td bgcolor="#16355b"><font color="white">TurnTask</font></td></tr>
+                               <hr/>
+                               <tr><td>driver : Driver</td></tr>
                                <hr/>
                                <tr><td>+ execute()</td></tr>
                         </table>>
 
         ]
 
-        AnalyserTask [
+        SoilAnalysisTask [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>AnalyserTask</td></tr>
+               <tr><td bgcolor="#16355b"><font color="white">SoilAnalysisTask</font></td></tr>
+                               <hr/>
+                               <tr><td>soilAnalyser : SoilAnalyser</td></tr>
                                <hr/>
                                <tr><td>+ execute()</td></tr>
                         </table>>
 
         ]
 
-        CameraTask [
+        PhotoTask [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>CameraTask</td></tr>
+               <tr><td bgcolor="#16355b"><font color="white">PhotoTask</font></td></tr>
+                               <hr/>
+                               <tr><td>camera : Camera</td></tr>
                                <hr/>
                                <tr><td>+ execute()</td></tr>
                         </table>>
@@ -149,7 +164,9 @@ subgraph cluster_task {
 
         ListExecuteTask [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>ListExecuteTask</td></tr>
+               <tr><td bgcolor="#16355b"><font color="white">ListExecuteTask</font></td></tr>
+                               <hr/>
+                               <tr><td>taskListManager : TaskListManager</td></tr>
                                <hr/>
                                <tr><td>+ execute()</td></tr>
                         </table>>
@@ -158,28 +175,42 @@ subgraph cluster_task {
 
         TaskParser [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>TaskParser</td></tr>
+               <tr><td bgcolor="#16355b"><font color="white">TaskParser</font></td></tr>
                                <hr/>
-                               <tr><td>+ parse()</td></tr>
+                               <tr><td>+ parseTask(message : String)</td></tr>
                         </table>>
 
         ]
 
         TaskListManager [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>TaskListManager</td></tr>
+               <tr><td bgcolor="#16355b"><font color="white">TaskListManager</font></td></tr>
                                <hr/>
-                               <tr><td>+ parse()</td></tr>
+                               <tr><td>+ addTaskList()</td></tr>
                         </table>>
 
         ]
  }
+    subgraph cluster_controller {
+             color = "green";
+             label = "Controller"
         RoverController [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>RoverController</td></tr>
+                               <tr><td bgcolor="#16355b"><font color="white">RoverController</font></td></tr>
+                               <hr/>
+                               <tr><td>camera : Camera</td></tr>
+                               <tr><td>comm : Comm</td></tr>
+                               <tr><td>driver : Driver</td></tr>
+                               <tr><td>soilAnalyser : SoilAnalyser</td></tr>
+                               <tr><td>taskListManager : TaskListManager</td></tr>
+                               <tr><td>taskParser : TaskParser</td></tr>
+                               <hr/>
+                               <tr><td>+ setResult()</td></tr>
+                               <tr><td>+ setError()</td></tr>
                         </table>>
 
         ]
+        }
 
         edge [ arrowhead = "empty" ];
         RoverComm -> Comm;
@@ -189,38 +220,38 @@ subgraph cluster_task {
 
         MoveTask -> Task;
         TurnTask -> Task;
-        AnalyserTask -> Task;
-        CameraTask -> Task;
+        SoilAnalysisTask -> Task;
+        PhotoTask -> Task;
+        ListExecuteTask -> Task;
 
         edge [ arrowhead = "odiamond" ];
-        Task -> TaskList;
+        Task -> TaskList  [ taillabel = "0..*"];
         RoverController -> TaskListManager;
-        TaskList -> TaskListManager;
+        TaskList -> TaskListManager [ taillabel = "0..*"];
 
-        edge [ arrowhead = "vee" ];
+        edge [ arrowhead = "vee", arrowtail = "vee" ];
         MoveTask -> RoverDriver;
         TurnTask -> RoverDriver;
-        AnalyserTask -> RoverSoilAnalyser;
-        CameraTask -> RoverCamera;
+        SoilAnalysisTask -> RoverSoilAnalyser;
+        PhotoTask -> RoverCamera;
 
         TaskParser -> MoveTask;
         TaskParser -> TurnTask;
-        TaskParser -> AnalyserTask;
+        TaskParser -> SoilAnalysisTask;
         TaskParser -> CameraTask;
         TaskParser -> ListExecuteTask;
 
-        TaskParser -> RoverDriver;
-        TaskParser -> RoverSoilAnalyser;
-        TaskParser -> RoverCamera;
+        TaskParser -> Driver;
+        TaskParser -> SoilAnalyser;
+        TaskParser -> Camera;
         TaskParser -> Task;
 
         TaskParser -> RoverController;
 
-        RoverController -> RoverComm;
+        RoverCamera -> RoverController [dir="both"];
+        RoverController -> RoverComm [dir="both"];
+        RoverDriver -> RoverController [dir="both"];
+        RoverSoilAnalyser -> RoverController [dir="both"];
 
-        RoverDriver -> RoverController;
-        RoverSoilAnalyser -> RoverController;
-        RoverCamera -> RoverController;
-
-        ListExecuteTask -> TaskList;
+        ListExecuteTask -> TaskListManager;
 }

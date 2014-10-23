@@ -69,6 +69,9 @@ public class RoverDriver extends Driver {
   /*
    * Our private class so we can spawn a thread that will generate
    * events after turn or drive requests have been issued.
+   *
+   * This is not in the UML because it's just for running the code for
+   * the simulation. It's not really part of the assignment design.
    */
   private class DriveThread implements Runnable {
     // Scale the time taken by distance (10M/sec) fast for a Rover.

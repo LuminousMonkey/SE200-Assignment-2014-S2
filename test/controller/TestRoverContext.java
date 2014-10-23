@@ -37,10 +37,13 @@ public class TestRoverContext {
     // Add out two lists.
     context.addTaskList("L1 {M 100\nT 50}");
     context.addTaskList("L2 {M 50\nT 25\nL 1}");
+    context.addTaskList("L3 {P\nL 2\nM 15}");
 
-    System.out.println("-------------------");
+    context.getTaskListManager().execute(3);
+    assertEquals(1, camera.getTakePhotoRequest());
+
     // Execute list two, which should execute list 1 last.
-    context.getTaskListManager().execute(2);
+    context.getTaskListManager().execute();
     assertEquals(50.0, driver.getDistanceReceived(), 0.1);
 
     context.getTaskListManager().execute();
@@ -53,6 +56,9 @@ public class TestRoverContext {
 
     context.getTaskListManager().execute();
     assertEquals(50.0, driver.getAngleReceived(), 0.1);
+
+    context.getTaskListManager().execute();
+    assertEquals(15.0, driver.getDistanceReceived(), 0.1);
   }
 
   /*
