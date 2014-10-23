@@ -8,18 +8,16 @@
 
 package task;
 
-import controller.RoverController;
-
 public class ListExecuteTask implements Task {
-  private RoverController context;
+  private TaskListManager taskListManager;
   private int listId;
 
-  public ListExecuteTask(RoverController inContext, int inListId) {
-    context = inContext;
+  public ListExecuteTask(TaskListManager inTaskListManager, int inListId) {
+    taskListManager = inTaskListManager;
     listId = inListId;
   }
 
   public void execute() {
-    context.execute(listId);
+    taskListManager.executeSubList(listId);
   }
 }

@@ -10,34 +10,37 @@
 
 package controller;
 
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-
 import hardware.Camera;
+import hardware.Comm;
 import hardware.Driver;
 import hardware.SoilAnalyser;
-import hardware.Comm;
+
+import hardware.RoverCamera;
+import hardware.EarthComm;
+import hardware.RoverDriver;
+import hardware.RoverSoilAnalyser;
 
 import task.TaskList;
+import task.TaskListManager;
+import task.TaskParser;
 
 public class RoverController {
-  private HashMap<Integer,TaskList> taskLists;
-  private Driver driver;
+  private TaskListManager taskListManager;
+  private TaskParser taskParser;
+
   private Camera camera;
-  private SoilAnalyser soilAnalyser;
   private Comm comm;
-
-  // Current running task list.
-  private TaskList currentTaskList;
-
-  // Lists that are pending to be executed.
-  private HashSet<Integer> pendingLists;
+  private Driver driver;
+  private SoilAnalyser soilAnalyser;
 
   public RoverController() {
-    taskLists = new HashMap<Integer,TaskList>();
-    pendingLists = new LinkedHashSet<Integer>();
+    taskListManager = new TaskListManager(this);
+    taskParser = new TaskParser(this);
+
+    camera = new RoverCamera(this);
+    comm = new EarthComm(this);
+    driver = new RoverDriver(this);
+    soilAnalyser = new RoverSoilAnalyser(this);
   }
 
   public Driver getDriver() {
@@ -72,31 +75,26 @@ public class RoverController {
     soilAnalyser = inAnalyser;
   }
 
+  public void setTaskListManager(TaskListManager inTaskListManager) {
+    taskListManager = inTaskListManager;
+  }
+
+  public TaskListManager getTaskListManager() {
+    return taskListManager;
+  }
+
+  public TaskParser getTaskParser() {
+    return taskParser;
+  }
+
   public void addTaskList(String message) {
-    TaskList taskListToAdd = new TaskList(this, message);
-    taskLists.put(taskListToAdd.getListId(), taskListToAdd);
-    pendingLists.add(taskListToAdd.getListId());
-  }
-
-  public void execute(int taskListId) {
-    currentTaskList = taskLists.get(taskListId);
-    currentTaskList.resetListCursor();
-    currentTaskList.execute();
-  }
-
-  public void execute() {
-    if (currentTaskList.hasNext()) {
-      currentTaskList.execute();
-    } else {
-      // No more tasks in the current list, execute anything pending.
-      executePending();
-    }
+    taskListManager.addTaskList(message);
   }
 
   public void setResult(String inResult) {
     // Send the result back.
     comm.send(inResult);
-    execute();
+    taskListManager.execute();
   }
 
   /*
@@ -111,22 +109,6 @@ public class RoverController {
     comm.send(inError);
 
     // Move onto the next task list.
-    executePending();
-  }
-
-  /*
-   * executePending
-   *
-   * Get the next list that is pending to be executed.
-   */
-  public void executePending() {
-    // Just get the first one.
-
-    Iterator<Integer> i = pendingLists.iterator();
-    if (i.hasNext()) {
-      Integer element = i.next();
-      execute(element);
-      i.remove();
-    }
+    taskListManager.executePending();
   }
 }

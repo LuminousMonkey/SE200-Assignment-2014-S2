@@ -10,7 +10,6 @@ public class TaskList {
   private final static int HEADER_INVALID = -1;
   private int listId;
   private List<Task> tasks;
-  private RoverController roverContext;
   private Iterator<Task> listIterator;
 
   private TaskList() {}
@@ -21,8 +20,7 @@ public class TaskList {
    * Assumes that the message is not empty, empty messages should be
    * checked before being passed in here.
    */
-  public TaskList(RoverController context, String message) {
-    roverContext = context;
+  public TaskList(TaskParser taskParser, String message) {
     tasks = new ArrayList<Task>();
 
     if (!message.isEmpty()) {
@@ -39,8 +37,6 @@ public class TaskList {
           throw new IllegalArgumentException("Invalid header");
         } else {
           // Go through the token list and add the tasks.
-          TaskParser taskParser = new TaskParser(context);
-
           for (int i = 1; i < tokens.length; i++) {
             tasks.add(taskParser.parseTask(tokens[i]));
           }

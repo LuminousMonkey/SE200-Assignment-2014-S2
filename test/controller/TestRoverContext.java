@@ -38,19 +38,20 @@ public class TestRoverContext {
     context.addTaskList("L1 {M 100\nT 50}");
     context.addTaskList("L2 {M 50\nT 25\nL 1}");
 
+    System.out.println("-------------------");
     // Execute list two, which should execute list 1 last.
-    context.execute(2);
+    context.getTaskListManager().execute(2);
     assertEquals(50.0, driver.getDistanceReceived(), 0.1);
 
-    context.execute();
+    context.getTaskListManager().execute();
     assertEquals(25.0, driver.getAngleReceived(), 0.1);
 
     // Told to start executing the new list, will run the next task in
     // the new list straight away.
-    context.execute();
+    context.getTaskListManager().execute();
     assertEquals(100.0, driver.getDistanceReceived(), 0.1);
 
-    context.execute();
+    context.getTaskListManager().execute();
     assertEquals(50.0, driver.getAngleReceived(), 0.1);
   }
 
@@ -71,11 +72,11 @@ public class TestRoverContext {
 
     // Execute the lists.
     // Will run the first task in the first pending list.
-    context.executePending();
+    context.getTaskListManager().executePending();
     assertEquals(100.0, driver.getDistanceReceived(), 0.1);
 
     // Should be the distance and angle from the first list.
-    context.execute();
+    context.getTaskListManager().execute();
     assertEquals(50.0, driver.getAngleReceived(), 0.1);
   }
 
@@ -93,7 +94,7 @@ public class TestRoverContext {
     comm.testReceive("L1 {M 100\nT 50}");
 
     // It's received, but it won't execute until told.
-    context.executePending();
+    context.getTaskListManager().executePending();
     assertEquals(100.00, driver.getDistanceReceived(), 0.1);
 
     // It has issued the move, and will not proceed until it gets a
@@ -119,7 +120,7 @@ public class TestRoverContext {
 
     // We get it to execute the pending tasks, this will get it to run
     // the first task in L1
-    context.executePending();
+    context.getTaskListManager().executePending();
     assertEquals(45.4, driver.getDistanceReceived(), 0.1);
 
     driver.testMoveFinished();
@@ -147,7 +148,7 @@ public class TestRoverContext {
 
     comm.testReceive("L1 {M 22\n}");
 
-    context.executePending();
+    context.getTaskListManager().executePending();
     assertEquals(22.0, driver.getDistanceReceived(), 0.1);
 
     // The rover is now waiting for the "moveFinished" event.
@@ -171,15 +172,16 @@ public class TestRoverContext {
     newContext();
 
     comm.testReceive("L1 {M 1}");
-    context.executePending();
+    context.getTaskListManager().executePending();
     assertEquals(1.0, driver.getDistanceReceived(), 0.1);
     driver.testMoveFinished();
 
     comm.testReceive("L2 {M 2\nL 1}");
-    context.executePending();
+    context.getTaskListManager().executePending();
     assertEquals(2.0, driver.getDistanceReceived(), 0.1);
     driver.testMoveFinished();
 
+    // L2 calls list 1
     assertEquals(1.0, driver.getDistanceReceived(), 0.1);
   }
 

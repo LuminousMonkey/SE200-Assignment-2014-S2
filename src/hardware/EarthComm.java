@@ -18,11 +18,13 @@ public class EarthComm extends Comm {
     controller = inController;
   }
 
+  @Override
   public void receive(String message) {
     System.out.println("Receving message from Earth.");
     controller.addTaskList(message);
   }
 
+  @Override
   public void send(String message) {
     System.out.println("Message: \"" + message + "\" sent to Earth");
   }

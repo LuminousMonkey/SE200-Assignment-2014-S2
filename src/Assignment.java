@@ -18,12 +18,11 @@ import hardware.EarthComm;
 
 import controller.RoverController;
 
+import task.TaskListManager;
+
 public class Assignment {
   private static RoverController controller;
-  private static Driver currentDriver;
-  private static Camera currentCamera;
-  private static SoilAnalyser currentSoilAnalyser;
-  private static EarthComm currentComms;
+  private static EarthComm comm;
 
   private static int listCount;
 
@@ -36,19 +35,11 @@ public class Assignment {
     // Init all the classes.
     controller = new RoverController();
 
-    currentDriver = new RoverDriver(controller);
-    currentCamera = new RoverCamera(controller);
-    currentSoilAnalyser = new RoverSoilAnalyser(controller);
-    currentComms = new EarthComm(controller);
-
-    controller.setDriver(currentDriver);
-    controller.setCamera(currentCamera);
-    controller.setSoilAnalyser(currentSoilAnalyser);
-    controller.setComm(currentComms);
+    comm = new EarthComm(controller);
 
     for (int i = 0; i < 10; i++) {
-      currentComms.receive(listGenerator());
-      controller.executePending();
+      comm.receive(listGenerator());
+      controller.getTaskListManager().executePending();
 
       try {
         Thread.sleep(500);

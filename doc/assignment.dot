@@ -1,31 +1,31 @@
 digraph G {
         fontname = "Concourse T7";
         fontsize = 13;
-        splines = ortho;
 
         node [
              shape = "plaintext";
              margin = 0;
         ]
 
-        Comm [
-             label = <<table border="1" cellborder="0" cellspacing="0">
-                             <tr><td>Comm</td></tr>
-                             <hr/>
-                             <tr><td>+ send : String</td></tr>
-                             <tr><td># <i>receive : String</i></td></tr>
-                      </table>>
+        subgraph cluster_hardware {
+                 Comm [
+                      label = <<table border="1" cellborder="0" cellspacing="0">
+                                      <tr><td>Comm</td></tr>
+                                      <hr/>
+                                      <tr><td>+ send : String</td></tr>
+                                      <tr><td># <i>receive : String</i></td></tr>
+                               </table>>
         ]
 
-        Driver [
-               label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>Driver</td></tr>
-                               <hr/>
-                               <tr><td>+ drive(distance : double)</td></tr>
-                               <tr><td>+ turn(angle : double)</td></tr>
-                               <tr><td># <i>moveFinished()</i></td></tr>
-                               <tr><td># <i>mechanicalError()</i></td></tr>
-                        </table>>
+                Driver [
+                       label = <<table border="1" cellborder="0" cellspacing="0">
+                                       <tr><td>Driver</td></tr>
+                                       <hr/>
+                                       <tr><td>+ drive(distance : double)</td></tr>
+                                       <tr><td>+ turn(angle : double)</td></tr>
+                                       <tr><td># <i>moveFinished()</i></td></tr>
+                                       <tr><td># <i>mechanicalError()</i></td></tr>
+                                </table>>
 
         ]
 
@@ -89,7 +89,9 @@ digraph G {
                         </table>>
 
         ]
+        }
 
+subgraph cluster_task {
         Task [
                label = <<table border="1" cellborder="0" cellspacing="0">
                                <tr><td>Task &lt;interface&gt;</td></tr>
@@ -163,6 +165,15 @@ digraph G {
 
         ]
 
+        TaskListManager [
+               label = <<table border="1" cellborder="0" cellspacing="0">
+                               <tr><td>TaskListManager</td></tr>
+                               <hr/>
+                               <tr><td>+ parse()</td></tr>
+                        </table>>
+
+        ]
+ }
         RoverController [
                label = <<table border="1" cellborder="0" cellspacing="0">
                                <tr><td>RoverController</td></tr>
@@ -183,7 +194,8 @@ digraph G {
 
         edge [ arrowhead = "odiamond" ];
         Task -> TaskList;
-        RoverController -> TaskList;
+        RoverController -> TaskListManager;
+        TaskList -> TaskListManager;
 
         edge [ arrowhead = "vee" ];
         MoveTask -> RoverDriver;
@@ -200,7 +212,9 @@ digraph G {
         TaskParser -> RoverDriver;
         TaskParser -> RoverSoilAnalyser;
         TaskParser -> RoverCamera;
-        TaskParser -> TaskList;
+        TaskParser -> Task;
+
+        TaskParser -> RoverController;
 
         RoverController -> RoverComm;
 
