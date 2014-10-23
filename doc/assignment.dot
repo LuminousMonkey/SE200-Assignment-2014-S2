@@ -92,7 +92,7 @@ digraph G {
 
         Task [
                label = <<table border="1" cellborder="0" cellspacing="0">
-                               <tr><td>Task</td></tr>
+                               <tr><td>Task &lt;interface&gt;</td></tr>
                                <hr/>
                                <tr><td># <i>execute()</i></td></tr>
                         </table>>

@@ -14,32 +14,35 @@ import org.junit.Before;
 import org.junit.Test;
 
 import controller.RoverController;
+import hardware.MockDriver;
 
 public class TestMoveTask {
   private final static double EPSILON = 0.01;
-  private RoverController context;
+  private RoverController controller;
+  private MockDriver driver;
 
   @Before
   public void setUp() {
-    context = new RoverController();
+    controller = new RoverController();
+    driver = new MockDriver(controller);
   }
 
   @Test
   public void testMoveLimits() {
-    MoveTask result = new MoveTask(context, -100.0);
+    MoveTask result = new MoveTask(driver, -100.0);
     assertEquals(-100, result.getDistance(), EPSILON);
 
-    result = new MoveTask(context, 100.0);
+    result = new MoveTask(driver, 100.0);
     assertEquals(100, result.getDistance(), EPSILON);
   }
 
   @Test(expected=IllegalArgumentException.class)
   public void testInvalidMaxDistance() {
-    MoveTask result = new MoveTask(context, MoveTask.MAX_DISTANCE_FWD + EPSILON);
+    MoveTask result = new MoveTask(driver, MoveTask.MAX_DISTANCE_FWD + EPSILON);
   }
 
   @Test(expected=IllegalArgumentException.class)
   public void testInvalidMinDistance() {
-    MoveTask result = new MoveTask(context, MoveTask.MAX_DISTANCE_REV - EPSILON);
+    MoveTask result = new MoveTask(driver, MoveTask.MAX_DISTANCE_REV - EPSILON);
   }
 }

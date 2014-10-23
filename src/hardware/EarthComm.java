@@ -18,7 +18,12 @@ public class EarthComm extends Comm {
     controller = inController;
   }
 
-  protected void receive(String message) {
+  public void receive(String message) {
+    System.out.println("Receving message from Earth.");
     controller.addTaskList(message);
+  }
+
+  public void send(String message) {
+    System.out.println("Message: \"" + message + "\" sent to Earth");
   }
 }

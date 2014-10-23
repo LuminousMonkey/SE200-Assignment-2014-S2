@@ -27,16 +27,16 @@ public class TaskParser {
 
     switch (tokens[0].charAt(0)) {
       case 'M':
-        result = new MoveTask(context, Double.parseDouble(tokens[1]));
+        result = new MoveTask(context.getDriver(), Double.parseDouble(tokens[1]));
         break;
       case 'T':
-        result = new TurnTask(context, Double.parseDouble(tokens[1]));
+        result = new TurnTask(context.getDriver(), Double.parseDouble(tokens[1]));
         break;
       case 'S':
-        result = new SoilAnalysisTask(context);
+        result = new SoilAnalysisTask(context.getSoilAnalyser());
         break;
       case 'P':
-        result = new PhotoTask(context);
+        result = new PhotoTask(context.getCamera());
         break;
       case 'L':
         result = new ListExecuteTask(context, Integer.parseInt(tokens[1]));

@@ -10,15 +10,16 @@ package task;
 import controller.RoverController;
 import hardware.Driver;
 
-public class MoveTask extends Task {
+public class MoveTask implements Task {
   public final static double MAX_DISTANCE_FWD = 100.0;
   public final static double MAX_DISTANCE_REV = -100.0;
 
+  private Driver driver;
   private double distance;
 
-  public MoveTask(RoverController inContext, double inDistance)
+  public MoveTask(Driver inDriver, double inDistance)
       throws IllegalArgumentException  {
-    super(inContext);
+    driver = inDriver;
     if (inDistance <= MAX_DISTANCE_FWD && inDistance >= MAX_DISTANCE_REV) {
       distance = inDistance;
     } else {
@@ -29,7 +30,7 @@ public class MoveTask extends Task {
 
   public void execute() {
     // Start the move.
-    context.getDriver().drive(distance);
+    driver.drive(distance);
   }
 
   public double getDistance() {

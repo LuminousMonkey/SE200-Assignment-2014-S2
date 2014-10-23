@@ -7,15 +7,16 @@
 
 package task;
 
-import controller.RoverController;
 import hardware.Camera;
 
-public class PhotoTask extends Task {
-  public PhotoTask(RoverController inContext) {
-    super(inContext);
+public class PhotoTask implements Task {
+  private Camera camera;
+
+  public PhotoTask(Camera inCamera) {
+    camera = inCamera;
   }
 
   public void execute() {
-    context.getCamera().takePhoto();
+    camera.takePhoto();
   }
 }

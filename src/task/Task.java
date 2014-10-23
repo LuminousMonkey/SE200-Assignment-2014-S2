@@ -1,21 +1,13 @@
 /*
  * Task
  *
- * Description:
+ * Description
+ * This is a very simple interface for implementing the command
+ * pattern used for task lists on the Rover.
  */
 
 package task;
 
-import controller.RoverController;
-
-public abstract class Task {
-  protected RoverController context;
-
-  private Task() {};
-
-  public Task(RoverController inContext) {
-    context = inContext;
-  }
-
+public interface Task {
   public abstract void execute();
 }

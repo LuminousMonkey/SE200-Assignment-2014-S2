@@ -7,15 +7,16 @@
 
 package task;
 
-import controller.RoverController;
 import hardware.SoilAnalyser;
 
-public class SoilAnalysisTask extends Task {
-  public SoilAnalysisTask(RoverController inContext) {
-    super(inContext);
+public class SoilAnalysisTask implements Task {
+  private SoilAnalyser soilAnalyser;
+
+  public SoilAnalysisTask(SoilAnalyser inSoilAnalyser) {
+    soilAnalyser = inSoilAnalyser;
   }
 
   public void execute() {
-    context.getSoilAnalyser().analyse();
+    soilAnalyser.analyse();
   }
 }

@@ -20,6 +20,33 @@ public class RoverCamera extends Camera {
     controller = inController;
   }
 
-  protected void photoReady(char[] photoData) {
+  @Override
+  public void takePhoto() {
+    System.out.println("Request for photo.");
+    PhotoThread responseThread = new PhotoThread();
+    Thread t = new Thread(responseThread);
+    t.start();
+  }
+
+  @Override
+  protected void photoReady(char[] inPhotoData) {
+    String photoMessage = new String(inPhotoData);
+    controller.setResult(photoMessage);
+  }
+
+  private class PhotoThread implements Runnable {
+    // Photos take the same amount of time to take.
+    private final static int PHOTO_DELAY = 500;
+
+    public void run() {
+      System.out.println("Photo thread running.");
+
+      try {
+        Thread.sleep(PHOTO_DELAY);
+        photoReady("Photo Ready".toCharArray());
+      } catch (InterruptedException e) {
+        System.out.println("Photo thread interrupted");
+      }
+    }
   }
 }

@@ -161,6 +161,28 @@ public class TestRoverContext {
     assertEquals(88.5, driver.getDistanceReceived(), 0.1);
   }
 
+  /*
+   * testMultipleListExecTasks
+   *
+   * Test that we can call multiple chained TaskLists.
+   */
+  @Test
+  public void testMultipleListExecTasks() {
+    newContext();
+
+    comm.testReceive("L1 {M 1}");
+    context.executePending();
+    assertEquals(1.0, driver.getDistanceReceived(), 0.1);
+    driver.testMoveFinished();
+
+    comm.testReceive("L2 {M 2\nL 1}");
+    context.executePending();
+    assertEquals(2.0, driver.getDistanceReceived(), 0.1);
+    driver.testMoveFinished();
+
+    assertEquals(1.0, driver.getDistanceReceived(), 0.1);
+  }
+
   private void newContext() {
     context = new RoverController();
     driver = new MockDriver(context);

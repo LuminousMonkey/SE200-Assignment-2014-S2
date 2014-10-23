@@ -29,11 +29,87 @@ public class RoverDriver extends Driver {
     controller = inController;
   }
 
-  public void moveFinished() {
+  /*
+   * drive
+   *
+   * This is the method that gets called when we want the rover to
+   * drive a certain distance. This is here to override the base class
+   * so we can actually get some output and a response from the driver
+   * module.
+   *
+   * When this function is called, it will start up another thread
+   * which will wait an amount of time (based on the distance), when
+   * the time is up, it will trigger the moveFinished, or
+   * mechanicalError methods.
+   */
+  @Override
+  public void drive(double distance) {
+    System.out.println("Request to move: " + distance);
+    DriveThread responseThread = new DriveThread(distance);
+    Thread t = new Thread(responseThread);
+    t.start();
+  }
+
+  @Override
+  public void turn(double inAngle) {
+    System.out.println("Request to turn: " + inAngle);
+    TurnThread responseThread = new TurnThread(inAngle);
+    Thread t = new Thread(responseThread);
+    t.start();
+  }
+
+  protected void moveFinished() {
     controller.setResult("Move finished.");
   }
 
-  public void mechanicalError() {
+  protected void mechanicalError() {
     controller.setError("Mechanical Error");
+  }
+
+  /*
+   * Our private class so we can spawn a thread that will generate
+   * events after turn or drive requests have been issued.
+   */
+  private class DriveThread implements Runnable {
+    // Scale the time taken by distance (10M/sec) fast for a Rover.
+    private final static int TIME_SCALING = 100;
+
+    private double distance;
+
+    public DriveThread(double inDistance) {
+      distance = inDistance;
+    }
+
+    public void run() {
+      System.out.println("Drive thread running");
+      try {
+        Thread.sleep((int) Math.abs(distance) * TIME_SCALING);
+
+        moveFinished();
+      } catch (InterruptedException e) {
+        System.out.println("Drive thread interrupted.");
+      }
+    }
+  }
+
+  private class TurnThread implements Runnable {
+    // Scan the time taken by angle (approx 360 deg in 2 sec.)
+    private final static int TIME_SCALING = 6;
+
+    private double angle;
+
+    public TurnThread(double inAngle) {
+      angle = inAngle;
+    }
+
+    public void run() {
+      System.out.println("Turn thread running.");
+      try {
+        Thread.sleep((int) Math.abs(angle) * TIME_SCALING);
+        moveFinished();
+      } catch (InterruptedException e) {
+        System.out.println("Turn thread interrupted");
+      }
+    }
   }
 }

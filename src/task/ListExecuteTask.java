@@ -10,11 +10,12 @@ package task;
 
 import controller.RoverController;
 
-public class ListExecuteTask extends Task {
+public class ListExecuteTask implements Task {
+  private RoverController context;
   private int listId;
 
   public ListExecuteTask(RoverController inContext, int inListId) {
-    super(inContext);
+    context = inContext;
     listId = inListId;
   }
 
