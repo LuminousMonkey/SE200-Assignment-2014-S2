@@ -23,15 +23,81 @@
 
 \startbodymatter
 
-\title{Introduction}
-What an assignment, this one has got to be one of the hardest assignments I've had to do. Simply because of
-
-\page[yes]
-
 \chapter{Step by step}
-The rover system is event based, either waiting for task lists to execute (as given by the Comm class), or waiting for events from the sensors and motors. When the rover first initialises, it needs to create instances of the \quote{hardware}.
+The rover system is event based, either waiting for task lists to execute (as given by the Comm class), or waiting for events from the sensors and motors. When the rover first initialises, it needs to create instances of the \quote{hardware}, then, for something to happen, an event has to occur which calls the necessary method.
+
+In the case of a message from Earth, it causes the \quote{receive} method to be called in the EarthComms class. This passes the message from Earth over to the RoverController class.
+
+Initially, instances of RoverController and EarthComm are created first. The creation of RoverController causes the creation of the \quote{hardware} instances, these include Camera, Comm, Driver, and SoilAnalyser instances.  The last instance worth mentioning that's created, is an instance of TaskParser.
+
+When constructing these instances, the controller passes itself to their constructor. This is because pf the event based interplay of the whole system. Hardware devices can fire events that the controller needs to respond to, at the same time the controller needs to parse, create, and run task lists that know how to communicate with the device instances that have been created.
+
+Some other instances of HashMap, HashSet, and Stack are created for keeping track of task lists, pending lists, and parent lists (for list recursion).
+
+The flow for a message from Earth is as follows:
+
+\startitemize[n]
+  \item Message from Earth. (Triggers receive(String message) in EarthComm).
+  \item EarthComm.receive calls the instance of RoverController that was passed to it when it was created. controller.addTaskToList. Passing the message onto it.
+  \item The controller instance then creates a new instance of a TaskList, passing in an instance of TaskParser that was created when the controller was constructed.
+  \item TaskList then creates a new list. Based off the string, and also using the TaskParser that was passed into it. It will return a TaskList instance, that is basically a collection of objects that conform to the Task interface. Each Task in the task list are instances that follow the Task interface, these instances have a reference to the device they're intended to (along with any other information needed to do that task).
+  \item This list is then queued up for execution until the Rover is ready.
+  \item (We will assume the Rover is ready, and the task list gets executed next, via the executePending method in controller)
+  \item executePending will go to the first item in the pendingList and execute that list.
+  \item This is done via the controller.element(listId) method, which loads the TaskList instance, and calls the execute() method on it.
+  \item The TaskList has an iterator, so for each call of execute, it will execute the current task. (Calls to execute() run one task only, repeated calls are needed for a list with multiple tasks.)
+  \item Calling execute() on the task list, then calls the execute() method for the current task, this is as per the \quote{Task} interface. It's the command pattern.
+  \item This will then call the necessary method for the device, based on the task, they call necessary method on the instance of the device that was encapsulated into them when they were created by TaskParse.
+  \item Then the thread of execute for the message from Earth terminates as it returns back through the call stack, exiting at the first call of receive().
+\stopitemize
+
+Nothing else will happen, as the Rover is now in a waiting state. It can still receive another message via receive, but any new messages just get added to the pending list. That is, until the device fires off an event indicating that it has produced a result.
+
+Say, for example, we had a photo task, and the camera now has it's photoready.
+
+\startitemize[n]
+    \item The RoverCamera instance calls it's photoReady() method. This calls the receiveResult() method of the controller instance (which is why we needed to encapuslate the controller instance into the RoverCamera instance when we created it). This passes a string of the data to the controller.
+    \item The controller then passes that data off to be send to Earth, using the send() method of the Comm instance.
+    \item With the data sent to Earth, the rover then proceeds to execute the next task in the current task list. (Basically going to step 6 above).
+\stopitemize
+
+Thus the great circle of life continues.
 
 \chapter{Discussion}
+\section{Patterns Used}
+Haven't used very many patterns, or at least, not in clear cut, \quote{That's a strategy pattern} sort of way. I have used some, the most obvious being the \quote{Command Pattern}. This was used so the task list could be all of the same type, and it's a fit for the situation here. It fits because it is essentially what the rover is doing, going through a list of tasks and executing each one.
+
+The command pattern also allows the instance of the controller to be self contained in the instance of the task, which means that I don't have to rely on getting the instance information about the device in another possibly messier way.
+
+OK, when I said, not a \quote{That's a strategy pattern} sort of way? I lied. Because that's what the TaskParser is doing, using the strategy pattern here means that my creation of my different tasks are all contained in the one class. It also simplifies my parameter passing, with the TaskParser strategy pattern I just pass in the single controller instance, rather than multiple hardware device instances.
+
+This did give me some issues with the degree of coupling that this was causing, but, given the system, I think this is a pretty good compromise. New tasks could be added fairly easily, but it would still involve changing multiple classes rather than one, however, I could not find an easy way to do this. (Possibly some form of reflection might be possible).
+
+A basic iterator pattern is used, but to save on the creation of interface classes, Java's own iterator is just passed through minimally. This is implemented in the TaskList class, via resetListCursor(), hasNext() and execute(). This was decided, because each Task List instance needed to keep track of it's current position independently of any other lists that may be executed at the time (thanks to the command that can all other lists.) With is pattern the Task List kept track of what it's current task is, meaning any calls could just be an execute() method call.
+
+\section{Alternative Design Choices}
+I could have implemented an Observer Pattern for the Camera, Comms, SoilAnalyser, and Drive classes. Instead I've used hard-coded notifications. The pros for using the observer pattern is that it would have more loosely coupled my controller to the hardware devices, and also I could have supported more than one observer.
+
+However, since I only had the one observer (the RoverController class), I didn't feel the benefit would outweigh the extra complexity introduced. If multiple observers are required in the future, I think that the code could be refactored to use the observer pattern without much effort.
+
+I could have also used a state pattern, for keeping track of the Rover's state, however, I could only come up with two real states (Idle and Running), plus, when I tried to come up with an implementation I came across the problem of it increasing the number of methods in my controller class, which would be my context. (As an aside, I did try doing the state pattern, hence why the controller is sometimes referred to by the variable \quote{context}).
+
+Also, I found that since my controller class contained all the instances of the devices, any classes that implemented the state with have a few context.getDriver(), context.getTaskList(), context.getTaskList().execute(), context.execute() method calls. The state pattern seems to add more complexity than might be required.
+
+That said, the state pattern would probably be a better abstraction from a design point of view, as it would give a clearer view on what operations where possible in the given state. Plus, again, if it needs to be expanded in the future, with more states, then a state pattern could be a better fit.
+
+\section{Separation of concerns}
+The system intentionally been designed to try and contain separate functionality into it's own packages. Hardware, which concerns the Comms, Camera, Driver, and Analyser devices. Tasks, which concerns creating of tasks, and abstraction them for execution. And the controller, which combines everything as best I can.
+
+It's been hard, because mainly of the asynchronous nature of the devices. It seems those hardware instances stretch their influence all over the system.
+
+\section{Achieve reuse}
+Mainly through the command pattern, abstracting and encapsulating the hardware devices in the tasks means that once I have a task instance created then I no longer need specific code to execute or handle that class.
+
+\section{Testability}
+Testing is achieved mainly, by allowing the default devices (Camera, Driver, etc), to be swapped out after the controller instance is created. Also, inheritance of the hardware devices for use in mock instances means that I was able to write some unit tests that let me make sure I didn't break much when I refactored.
+
+Please check the unit testing code in the test/ directory for examples.
 
 \stopbodymatter
 \stoptext

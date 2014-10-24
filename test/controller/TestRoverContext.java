@@ -9,7 +9,6 @@
 
 package controller;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -20,7 +19,7 @@ import hardware.MockComm;
 import hardware.MockCamera;
 
 public class TestRoverContext {
-  private RoverController context;
+  private MockRoverController context;
   private MockDriver driver;
   private MockComm comm;
   private MockCamera camera;
@@ -193,7 +192,7 @@ public class TestRoverContext {
   }
 
   private void newContext() {
-    context = new RoverController();
+    context = new MockRoverController();
     driver = new MockDriver(context);
     comm = new MockComm(context);
     camera = new MockCamera(context);

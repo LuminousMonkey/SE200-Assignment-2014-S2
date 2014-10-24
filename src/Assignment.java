@@ -32,6 +32,9 @@ public class Assignment {
     controller = new RoverController();
     comm = new EarthComm(controller);
 
+    comm.receive(listGenerator());
+    controller.executePending();
+
     for (int i = 0; i < 10; i++) {
       comm.receive(listGenerator());
 

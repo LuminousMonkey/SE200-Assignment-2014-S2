@@ -118,7 +118,7 @@ subgraph cluster_task {
                                <tr><td>tasks : List</td></tr>
                                <hr/>
                                <tr><td>+ TaskList(taskParser : TaskParser, message : String)</td></tr>
-                               <tr><td>+ resetListCurser()</td></tr>
+                               <tr><td>+ resetListCursor()</td></tr>
                                <tr><td>+ hasNext()</td></tr>
                                <tr><td>+ execute()</td></tr>
                         </table>>
@@ -185,6 +185,8 @@ subgraph cluster_task {
                label = <<table border="1" cellborder="0" cellspacing="0">
                <tr><td bgcolor="#16355b"><font color="white">TaskParser</font></td></tr>
                                <hr/>
+                               <tr><td>controller : RoverController</td></tr>
+                               <hr/>
                                <tr><td>+ parseTask(message : String)</td></tr>
                         </table>>
 
@@ -203,9 +205,14 @@ subgraph cluster_task {
                                <tr><td>driver : Driver</td></tr>
                                <tr><td>soilAnalyser : SoilAnalyser</td></tr>
                                <tr><td>taskParser : TaskParser</td></tr>
+                               <tr><td>currentTaskList : TaskList</td></tr>
                                <hr/>
-                               <tr><td>+ setResult()</td></tr>
-                               <tr><td>+ setError()</td></tr>
+                               <tr><td>+ addTaskList(message : String)</td></tr>
+                               <tr><td>+ receiveResult(result : String)</td></tr>
+                               <tr><td>+ receiveError(error : String)</td></tr>
+                               <tr><td>+ execute(taskListId : Int)</td></tr>
+                               <tr><td>+ receiveSubList(taskListId : Int)</td></tr>
+                               <tr><td>+ executePending()</td></tr>
                         </table>>
 
         ]

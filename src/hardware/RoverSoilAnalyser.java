@@ -25,7 +25,7 @@ public class RoverSoilAnalyser extends SoilAnalyser {
 
   public void analysisReady(String soilAnalysis) {
     // Set result ready.
-    controller.setResult(soilAnalysis);
+    controller.receiveResult(soilAnalysis);
   }
 
   private class SoilAnalyserThread implements Runnable {

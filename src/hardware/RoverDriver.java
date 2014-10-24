@@ -59,11 +59,11 @@ public class RoverDriver extends Driver {
   }
 
   protected void moveFinished() {
-    controller.setResult("Move finished.");
+    controller.receiveResult("Move finished.");
   }
 
   protected void mechanicalError() {
-    controller.setError("Mechanical Error");
+    controller.receiveError("Mechanical Error");
   }
 
   /*

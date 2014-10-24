@@ -31,7 +31,7 @@ public class RoverCamera extends Camera {
   @Override
   protected void photoReady(char[] inPhotoData) {
     String photoMessage = new String(inPhotoData);
-    controller.setResult(photoMessage);
+    controller.receiveResult(photoMessage);
   }
 
   private class PhotoThread implements Runnable {
