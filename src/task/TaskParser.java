@@ -39,7 +39,7 @@ public class TaskParser {
         result = new PhotoTask(context.getCamera());
         break;
       case 'L':
-        result = new ListExecuteTask(context.getTaskListManager(), Integer.parseInt(tokens[1]));
+        result = new ListExecuteTask(context, Integer.parseInt(tokens[1]));
         break;
       default:
         throw new TaskParseException("Unknown Task given.");

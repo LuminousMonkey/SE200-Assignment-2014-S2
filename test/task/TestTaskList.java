@@ -23,6 +23,7 @@ public class TestTaskList {
   private MockDriver driver;
   private MockCamera camera;
   private MockSoilAnalyser soilAnal;
+  private TaskParser taskParser;
 
   @Before
   public void setUp() {
@@ -34,42 +35,44 @@ public class TestTaskList {
     context.setDriver(driver);
     context.setCamera(camera);
     context.setSoilAnalyser(soilAnal);
+
+    taskParser = new TaskParser(context);
   }
 
   @Test(expected=IllegalArgumentException.class)
   public void testNoInstructions() {
-    TaskList testTaskList = new TaskList(context.getTaskParser(), "ASD ASDF asd");
+    TaskList testTaskList = new TaskList(taskParser, "ASD ASDF asd");
   }
 
   @Test(expected=IllegalArgumentException.class)
   public void testEmptyList() {
-    TaskList testTaskList = new TaskList(context.getTaskParser(), "L1 {}");
+    TaskList testTaskList = new TaskList(taskParser, "L1 {}");
   }
 
   @Test(expected=IllegalArgumentException.class)
   public void testInvalidListHeader() {
-    TaskList testTaskList = new TaskList(context.getTaskParser(), "B1 {G 3\nH\nB 11\n}");
+    TaskList testTaskList = new TaskList(taskParser, "B1 {G 3\nH\nB 11\n}");
   }
 
   @Test(expected=TaskParseException.class)
   public void testInvalidListContents() {
-    TaskList testTaskList = new TaskList(context.getTaskParser(), "L1 {G 3\nH\nB 11\n}");
+    TaskList testTaskList = new TaskList(taskParser, "L1 {G 3\nH\nB 11\n}");
   }
 
   @Test
   public void testValidList() {
-    TaskList testTaskList = new TaskList(context.getTaskParser(), "L100 {M 100\nT 90\nP\nS}");
+    TaskList testTaskList = new TaskList(taskParser, "L100 {M 100\nT 90\nP\nS}");
     assertEquals(100, testTaskList.getListId());
     assertEquals(4, testTaskList.getSize());
   }
 
   @Test
   public void testListExecute() {
-    TaskList testTaskList = new TaskList(context.getTaskParser(), "L1 {M 100\n}");
+    TaskList testTaskList = new TaskList(taskParser, "L1 {M 100\n}");
     testTaskList.execute();
     assertEquals(100.0, driver.getDistanceReceived(), 0.1);
 
-    testTaskList = new TaskList(context.getTaskParser(), "L2 {T -15\n}");
+    testTaskList = new TaskList(taskParser, "L2 {T -15\n}");
     testTaskList.execute();
     assertEquals(-15.0, driver.getAngleReceived(), 0.1);
   }
@@ -81,7 +84,7 @@ public class TestTaskList {
    */
   @Test
   public void testAllDevices() {
-    TaskList testTaskList = new TaskList(context.getTaskParser(),
+    TaskList testTaskList = new TaskList(taskParser,
                                          "L1 {M 100\nT 10\nS\nP\n}");
     for (int i = 0; i < 4; i++) {
       testTaskList.execute();

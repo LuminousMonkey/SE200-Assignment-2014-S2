@@ -1,3 +1,9 @@
+/*
+ * TaskList
+ *
+ * Handles the individual task lists.
+ */
+
 package task;
 
 import java.util.Iterator;
@@ -12,6 +18,13 @@ public class TaskList {
   private List<Task> tasks;
   private Iterator<Task> listIterator;
 
+  /*
+   * TaskList()
+   *
+   * Because we can't create any tasks without the task parser and the
+   * actual message make the default constructor private to enforce
+   * this requirement.
+   */
   private TaskList() {}
 
   /*
@@ -88,14 +101,30 @@ public class TaskList {
     return result;
   }
 
+  /*
+   * resetListCursor
+   *
+   * Cause any execute() calls from this point onwards to start at the
+   * beginning of the list again.
+   */
   public void resetListCursor() {
     listIterator = tasks.iterator();
   }
 
+  /*
+   * hasNext
+   *
+   * Return true if we have any task to move onto.
+   */
   public boolean hasNext() {
     return listIterator.hasNext();
   }
 
+  /*
+   * execute
+   *
+   * If we have another task to move onto, execute it.
+   */
   public void execute() {
     if (listIterator.hasNext()) {
       Task currentTask = listIterator.next();

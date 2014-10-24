@@ -20,8 +20,6 @@ import hardware.EarthComm;
 
 import controller.RoverController;
 
-import task.TaskListManager;
-
 public class Assignment {
   private static RoverController controller;
   private static EarthComm comm;

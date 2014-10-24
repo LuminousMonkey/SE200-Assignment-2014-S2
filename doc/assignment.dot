@@ -58,6 +58,8 @@ digraph G {
                 label = <<table border="1" cellborder="0" cellspacing="0">
                 <tr><td bgcolor="#16355b"><font color="white">EarthComm</font></td></tr>
                                 <hr/>
+                                <tr><td>controller : RoverController</td></tr>
+                                <hr/>
                                 <tr><td>+ send : String</td></tr>
                                 <tr><td>+ receive : String</td></tr>
                          </table>>
@@ -112,7 +114,13 @@ subgraph cluster_task {
                label = <<table border="1" cellborder="0" cellspacing="0">
                <tr><td bgcolor="#16355b"><font color="white">TaskList</font></td></tr>
                                <hr/>
-                               <tr><td> add(toAdd : Task)</td></tr>
+                               <tr><td>listId : Integer</td></tr>
+                               <tr><td>tasks : List</td></tr>
+                               <hr/>
+                               <tr><td>+ TaskList(taskParser : TaskParser, message : String)</td></tr>
+                               <tr><td>+ resetListCurser()</td></tr>
+                               <tr><td>+ hasNext()</td></tr>
+                               <tr><td>+ execute()</td></tr>
                         </table>>
 
         ]
@@ -166,7 +174,7 @@ subgraph cluster_task {
                label = <<table border="1" cellborder="0" cellspacing="0">
                <tr><td bgcolor="#16355b"><font color="white">ListExecuteTask</font></td></tr>
                                <hr/>
-                               <tr><td>taskListManager : TaskListManager</td></tr>
+                               <tr><td>controller : RoverController</td></tr>
                                <hr/>
                                <tr><td>+ execute()</td></tr>
                         </table>>
@@ -182,14 +190,6 @@ subgraph cluster_task {
 
         ]
 
-        TaskListManager [
-               label = <<table border="1" cellborder="0" cellspacing="0">
-               <tr><td bgcolor="#16355b"><font color="white">TaskListManager</font></td></tr>
-                               <hr/>
-                               <tr><td>+ addTaskList()</td></tr>
-                        </table>>
-
-        ]
  }
     subgraph cluster_controller {
              color = "green";
@@ -202,7 +202,6 @@ subgraph cluster_task {
                                <tr><td>comm : Comm</td></tr>
                                <tr><td>driver : Driver</td></tr>
                                <tr><td>soilAnalyser : SoilAnalyser</td></tr>
-                               <tr><td>taskListManager : TaskListManager</td></tr>
                                <tr><td>taskParser : TaskParser</td></tr>
                                <hr/>
                                <tr><td>+ setResult()</td></tr>
@@ -226,8 +225,8 @@ subgraph cluster_task {
 
         edge [ arrowhead = "odiamond" ];
         Task -> TaskList  [ taillabel = "0..*"];
-        RoverController -> TaskListManager;
-        TaskList -> TaskListManager [ taillabel = "0..*"];
+        TaskList -> RoverController [ taillabel = "0..*"];
+        TaskParser -> RoverController;
 
         edge [ arrowhead = "vee", arrowtail = "vee" ];
         MoveTask -> RoverDriver;
@@ -238,7 +237,7 @@ subgraph cluster_task {
         TaskParser -> MoveTask;
         TaskParser -> TurnTask;
         TaskParser -> SoilAnalysisTask;
-        TaskParser -> CameraTask;
+        TaskParser -> PhotoTask;
         TaskParser -> ListExecuteTask;
 
         TaskParser -> Driver;
@@ -246,12 +245,12 @@ subgraph cluster_task {
         TaskParser -> Camera;
         TaskParser -> Task;
 
-        TaskParser -> RoverController;
+        TaskParser -> RoverController [dir="both"];
 
         RoverCamera -> RoverController [dir="both"];
         RoverController -> RoverComm [dir="both"];
         RoverDriver -> RoverController [dir="both"];
         RoverSoilAnalyser -> RoverController [dir="both"];
 
-        ListExecuteTask -> TaskListManager;
+        ListExecuteTask -> RoverController;
 }
